@@ -4,12 +4,14 @@ import 'package:movie_app/views/home.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp( MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => MovieViewModel()),
-    ],
-    child: MyApp(),
-  ),);
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MovieViewModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,4 +23,5 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const Home(),
     );
-  }}
+  }
+}

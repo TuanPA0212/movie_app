@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:movie_app/core/app_logger.dart';
 
 import '../models/movie.dart';
 import '../repository/movie_repository.dart';
@@ -19,7 +20,7 @@ class MovieViewModel extends ChangeNotifier {
       final response = await _repository.fetchNowPlayingMovies();
       _movies = response.movies;
     } catch (e) {
-      debugPrint("Error movies view model: $e");
+      AppLogger.logger.e("Error movies view model: $e");
     }
     _isLoading = false;
     notifyListeners();
