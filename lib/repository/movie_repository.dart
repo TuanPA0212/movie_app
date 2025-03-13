@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'package:movie_app/core/api_keys.dart';
 import 'package:movie_app/core/endpoints.dart';
 import 'package:movie_app/models/movie_response.dart';
 
@@ -19,7 +17,7 @@ class MovieRepository implements Repository {
   @override
   Future<MovieResponse> fetchNowPlayingMovies() async {
     final url =
-        '${ApiConstants.baseUrl}/${MovieEndpoints.nowPlaying}?api_key=${ApiConstants.getApiKey()}&language=en-US&page=1';
+        '${ApiConstants.baseUrl}/${MovieEndpoints.nowPlaying}?api_key=${ApiConstants.apiKey}&language=en-US&page=1';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
 
