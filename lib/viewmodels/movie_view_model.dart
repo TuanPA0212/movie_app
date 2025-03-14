@@ -25,6 +25,9 @@ class MovieViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+
+
 }
 
 
