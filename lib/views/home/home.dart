@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/core/api_constants.dart';
 import 'package:movie_app/core/theme/app_text_style.dart';
 import 'package:movie_app/viewmodels/movie_view_model.dart';
 import 'package:movie_app/viewmodels/navigation_view_model.dart';
@@ -24,9 +25,12 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<MovieViewModel>(context, listen: false)
-            .fetchNowPlayingMovie());
+    Future.microtask(() {
+      final movieProvider = Provider.of<MovieViewModel>(context, listen: false);
+      movieProvider.fetchNowPlayingMovie();
+      movieProvider.fetchTopRatedMovie();
+      movieProvider.fetchUpcomingMovie();
+    });
   }
 
   @override
@@ -38,18 +42,27 @@ class _HomeState extends State<Home> {
           navigationProvider.currentIndex == 0
               ? "My Netflix"
               : navigationProvider.currentIndex == 1
-              ? "New & Hot"
-              : "For PATzz",
+                  ? "New & Hot"
+                  : "For PATzz",
           style: AppTextStyle.textTitle,
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.search, size: 32,)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.menu, size: 32,))
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.search,
+                size: 32,
+              )),
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.menu,
+                size: 32,
+              ))
         ],
       ),
       body: _pages[navigationProvider.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        // backgroundColor: Colors.white.withOpacity(0.2),
         currentIndex: navigationProvider.currentIndex,
         onTap: navigationProvider.setTabIndex,
         items: [
@@ -57,7 +70,12 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
               icon: Icon(Icons.photo_library_outlined), label: "New & Hot"),
           BottomNavigationBarItem(
-              icon: Image.asset("assets/avatar.png", height: 24, width: 24,), label: "My Netflix"),
+              icon: Image.asset(
+                "assets/avatar.png",
+                height: 24,
+                width: 24,
+              ),
+              label: "My Netflix"),
         ],
       ),
     );
@@ -70,24 +88,169 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(context) {
     final movieProvider = Provider.of<MovieViewModel>(context);
+
     return movieProvider.isLoading
         ? Center(child: CircularProgressIndicator())
-    // : movieProvider.errorMessage.isNotEmpty
-    // ? Center(child: Text(movieViewModel.errorMessage))
-        : ListView.builder(
-            itemCount: movieProvider.movies.length,
-            itemBuilder: (context, index) {
-              final movie = movieProvider.movies[index];
-              return ListTile(
-                // leading: Image.network(
-                //   "https://image.tmdb.org/t/p/w200${movie.posterPath}",
-                //   width: 50,
-                //   fit: BoxFit.cover,
-                // ),
-                title: Text(movie.title),
-                subtitle: Text("⭐ ${movie.voteAverage}"),
-              );
-            },
-          );
+        : SingleChildScrollView(
+            child: Column(
+            children: [
+              NowPlayingList(),
+              SizedBox(height: 16),
+              PopularList(),
+              SizedBox(height: 16),
+              UpcomingList()
+            ],
+          ));
+  }
+}
+
+class NowPlayingList extends StatelessWidget {
+  const NowPlayingList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final movieProvider = Provider.of<MovieViewModel>(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text("Now Playing"),
+            )
+          ],
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            height: screenHeight * 0.25,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: movieProvider.nowPlayingMovies.length,
+              itemBuilder: (context, index) {
+                final movie = movieProvider.nowPlayingMovies[index];
+                return Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.network(
+                        "${ApiConstants.imageBaseUrl}${movie.posterPath}",
+                        width: screenWidth * 0.30,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.broken_image);
+                        },
+                      ),
+                    ));
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class PopularList extends StatelessWidget {
+  const PopularList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final movieProvider = Provider.of<MovieViewModel>(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text("Top Rated"),
+            )
+          ],
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            height: screenHeight * 0.25,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: movieProvider.topRatedMovies.length,
+              itemBuilder: (context, index) {
+                final movie = movieProvider.topRatedMovies[index];
+                return Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.network(
+                        "${ApiConstants.imageBaseUrl}${movie.posterPath}",
+                        width: screenWidth * 0.30,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.broken_image);
+                        },
+                      ),
+                    ));
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class UpcomingList extends StatelessWidget {
+  const UpcomingList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final movieProvider = Provider.of<MovieViewModel>(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Text("Upcoming"),
+            )
+          ],
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            height: screenHeight * 0.25,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: movieProvider.upComingMovies.length,
+              itemBuilder: (context, index) {
+                final movie = movieProvider.upComingMovies[index];
+                return Padding(
+                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.network(
+                        "${ApiConstants.imageBaseUrl}${movie.posterPath}",
+                        width: screenWidth * 0.30,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.broken_image);
+                        },
+                      ),
+                    ));
+              },
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

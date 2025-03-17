@@ -6,10 +6,14 @@ import '../repository/movie_repository.dart';
 
 class MovieViewModel extends ChangeNotifier {
   final MovieRepository _repository = MovieRepository();
-  List<Movie> _movies = [];
+  List<Movie> _nowPlayingMovies = [];
+  List<Movie> _topRatedMovies = [];
+  List<Movie> _upComingMovies = [];
   bool _isLoading = false;
 
-  List<Movie> get movies => _movies;
+  List<Movie> get nowPlayingMovies => _nowPlayingMovies;
+  List<Movie> get topRatedMovies => _topRatedMovies;
+  List<Movie> get upComingMovies => _upComingMovies;
   bool get isLoading => _isLoading;
 
   Future<void> fetchNowPlayingMovie() async {
@@ -18,15 +22,41 @@ class MovieViewModel extends ChangeNotifier {
 
     try {
       final response = await _repository.fetchNowPlayingMovies();
-      _movies = response.movies;
+      _nowPlayingMovies = response.movies;
     } catch (e) {
-      AppLogger.logger.e("Error movies view model: $e");
+      AppLogger.logger.e("Error now playing movies view model: $e");
     }
     _isLoading = false;
     notifyListeners();
   }
 
+  Future<void> fetchTopRatedMovie() async {
+    _isLoading = true;
+    notifyListeners();
 
+    try {
+      final response = await _repository.fetchTopRatedMovies();
+      _topRatedMovies = response.movies;
+    } catch (e) {
+      AppLogger.logger.e("Error popular movies view model: $e");
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchUpcomingMovie() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _repository.fetchUpcomingMovies();
+      _upComingMovies = response.movies;
+    } catch (e) {
+      AppLogger.logger.e("Error popular movies view model: $e");
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
 
 }
 
