@@ -28,18 +28,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.blue, // Màu chính
+        primaryColor: Colors.black, // Màu chính
         scaffoldBackgroundColor: Colors.black, // Màu nền
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.black,
+        appBarTheme:  AppBarTheme(
+          backgroundColor: Colors.white.withOpacity(0.1),
+          foregroundColor: Colors.white,
         ),
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 18, color: Colors.white),
           bodyMedium: TextStyle(fontSize: 16, color: Colors.white),
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: AppColors.secondary,
+        bottomNavigationBarTheme:  BottomNavigationBarThemeData(
+          // backgroundColor: AppColors.primary,
+          backgroundColor: Colors.white.withOpacity(0.1),
+          elevation: 0,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.grey,
         ),
