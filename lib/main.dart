@@ -5,7 +5,6 @@ import 'package:movie_app/views/home/home.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'core/theme/app_colors.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
