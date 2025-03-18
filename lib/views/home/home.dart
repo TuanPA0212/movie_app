@@ -98,7 +98,8 @@ class HomeTab extends StatelessWidget {
               SizedBox(height: 16),
               PopularList(),
               SizedBox(height: 16),
-              UpcomingList()
+              UpcomingList(),
+              SizedBox(height: 16),
             ],
           ));
   }
@@ -249,7 +250,7 @@ class UpcomingList extends StatelessWidget {
               },
             ),
           ),
-        )
+        ),
       ],
     );
   }
