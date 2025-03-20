@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:movie_app/core/app_logger.dart';
 import 'package:movie_app/core/endpoints.dart';
 import 'package:movie_app/models/movie_response.dart';
 
@@ -13,6 +14,8 @@ abstract interface class Repository {
   Future<MovieResponse> fetchTopRatedMovies();
 
   Future<MovieResponse> fetchUpcomingMovies();
+
+  Future<MovieResponse> searchMovies(String keyword);
 }
 
 class MovieRepository implements Repository {
@@ -50,6 +53,21 @@ class MovieRepository implements Repository {
   Future<MovieResponse> fetchUpcomingMovies() async {
     final url =
         '${ApiConstants.baseUrl}/${MovieEndpoints.upcoming}?api_key=${ApiConstants.apiKey}&language=en-US&page=1';
+    final uri = Uri.parse(url);
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      return MovieResponse.fromJson(json.decode(response.body));
+    } else {
+      throw Exception("Failed to load popular movies repository");
+    }
+  }
+
+  @override
+  Future<MovieResponse> searchMovies(String keyword) async{
+    final url =
+        // '${ApiConstants.baseUrl}/${MovieEndpoints.search}?api_key=${ApiConstants.apiKey}&page=1&query=${keyword}';
+        '${ApiConstants.baseUrl}/${MovieEndpoints.search}?api_key=${ApiConstants.apiKey}&query=${keyword}&language=en-US&page=1';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
 

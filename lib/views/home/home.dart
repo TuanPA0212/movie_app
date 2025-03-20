@@ -4,6 +4,7 @@ import 'package:movie_app/core/theme/app_text_style.dart';
 import 'package:movie_app/viewmodels/movie_view_model.dart';
 import 'package:movie_app/viewmodels/navigation_view_model.dart';
 import 'package:movie_app/views/myNetflix/my_netflix.dart';
+import 'package:movie_app/views/search/search.dart';
 import 'package:provider/provider.dart';
 
 import '../newAndHot/new_and_hot.dart';
@@ -38,6 +39,7 @@ class _HomeState extends State<Home> {
     final navigationProvider = Provider.of<NavigationViewModel>(context);
     return Scaffold(
       appBar: AppBar(
+        // forceMaterialTransparency: true, //transparent dây (xem lai)
         title: Text(
           navigationProvider.currentIndex == 0
               ? "My Netflix"
@@ -48,7 +50,7 @@ class _HomeState extends State<Home> {
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: navigate,
               icon: Icon(
                 Icons.search,
                 size: 32,
@@ -79,6 +81,11 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  void navigate() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const SearchPage()));
   }
 }
 

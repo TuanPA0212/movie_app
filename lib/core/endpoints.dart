@@ -3,4 +3,5 @@ class MovieEndpoints {
   static const String popular = "movie/popular";
   static const String topRated = "movie/top_rated";
   static const String upcoming = "movie/upcoming";
+  static const String search = "search/movie";
 }
